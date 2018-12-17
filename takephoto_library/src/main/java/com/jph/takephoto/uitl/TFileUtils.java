@@ -1,6 +1,7 @@
 package com.jph.takephoto.uitl;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
@@ -14,15 +15,25 @@ import java.io.File;
  * Eamil:crazycodeboy@gmail.com
  */
 public class TFileUtils {
-    private static final String TAG="TFileUtils";
-    private static String DEFAULT_DISK_CACHE_DIR = "takephoto_cache";
+    private static final String TAG = "TFileUtils";
+    private static String DEFAULT_DISK_CACHE_DIR = "cache";
+
+    private static String sCachePath = null;
+
+    public static void setCachePath(String cachePath) {
+        sCachePath = cachePath;
+    }
+
     public static File getPhotoCacheDir(Context context, File file) {
         File cacheDir = context.getCacheDir();
+        if (!TextUtils.isEmpty(sCachePath )) {
+            cacheDir = new File(sCachePath);
+        }
         if (cacheDir != null) {
-            File mCacheDir = new File(cacheDir,DEFAULT_DISK_CACHE_DIR);
+            File mCacheDir = new File(cacheDir, DEFAULT_DISK_CACHE_DIR);
             if (!mCacheDir.mkdirs() && (!mCacheDir.exists() || !mCacheDir.isDirectory())) {
                 return file;
-            }else {
+            } else {
                 return new File(mCacheDir, file.getName());
             }
         }
@@ -34,11 +45,11 @@ public class TFileUtils {
 
     public static void delete(String path) {
         try {
-            if(path == null) {
-                return ;
+            if (path == null) {
+                return;
             }
             File file = new File(path);
-            if(!file.delete()) {
+            if (!file.delete()) {
                 file.deleteOnExit();
             }
         } catch (Exception e) {

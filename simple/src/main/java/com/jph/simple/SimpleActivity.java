@@ -2,13 +2,16 @@ package com.jph.simple;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.jph.takephoto.app.TakePhotoActivity;
 import com.jph.takephoto.model.TImage;
 import com.jph.takephoto.model.TResult;
+import com.jph.takephoto.uitl.TFileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -34,16 +37,19 @@ import java.util.ArrayList;
  */
 public class SimpleActivity extends TakePhotoActivity {
     private CustomHelper customHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View contentView=LayoutInflater.from(this).inflate(R.layout.common_layout,null);
+        TFileUtils.setCachePath(Environment.getExternalStorageDirectory().getAbsolutePath()
+                + File.separator + "suntiago" + File.separator + "takephoto" + File.separator);
+        View contentView = LayoutInflater.from(this).inflate(R.layout.common_layout, null);
         setContentView(contentView);
-        customHelper=CustomHelper.of(contentView);
+        customHelper = CustomHelper.of(contentView);
     }
 
     public void onClick(View view) {
-        customHelper.onClick(view,getTakePhoto());
+        customHelper.onClick(view, getTakePhoto());
     }
 
     @Override
@@ -63,8 +69,8 @@ public class SimpleActivity extends TakePhotoActivity {
     }
 
     private void showImg(ArrayList<TImage> images) {
-        Intent intent=new Intent(this,ResultActivity.class);
-        intent.putExtra("images",images);
+        Intent intent = new Intent(this, ResultActivity.class);
+        intent.putExtra("images", images);
         startActivity(intent);
     }
 }
